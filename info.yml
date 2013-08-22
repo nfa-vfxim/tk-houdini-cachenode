@@ -1,0 +1,52 @@
+#
+# Copyright (c) 2013 Shotgun Software, Inc
+# ----------------------------------------------------
+#
+# Metadata defining the behaviour and requirements for this app
+
+# expected fields in the configuration file for this app
+configuration:
+    name:
+        type: str
+        description: >
+            A human readable name to display in the HDA to allow selection of this
+            set of configuration options in Houdini.
+
+    work_file_template:
+        type: template
+        description: >
+            A reference to a template which locates a Houdini work file on disk.
+            This is used to drive the version and optionally the name of output files.
+        required_fields: [version]
+        optional_fields: [name]
+
+    work_cache_template:
+        type: template
+        required_fields: [version]
+        optional_fields: [name,node]
+
+    # publish_cache_template:
+    #     type: template
+    #     required_fields: [version]
+    #     optional_fields: [name,TankType]
+
+    # tank_type:
+    #     type: tank_type
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item 
+display_name: "Alembic Output Node"
+description: "Support for the Toolkit Alembic output node in Houdini."
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.12.5"
+requires_engine_version: "v0.2.3"
+
+# the engines that this app can operate in:
+supported_engines: [tk-houdini]
+
+# the frameworks required to run this app
+frameworks: 
