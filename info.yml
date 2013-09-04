@@ -32,13 +32,6 @@ configuration:
         required_fields: [version]
         optional_fields: [name,node]
 
-    # publish_cache_template:
-    #     type: template
-    #     required_fields: [version]
-    #     optional_fields: [name,TankType]
-
-    # tank_type:
-    #     type: tank_type
 
 # the Shotgun fields that this app needs in order to operate correctly
 requires_shotgun_fields:
