@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Shotgun Software Inc.
+# Copyright (c) 2015 Shotgun Software Inc.
 # 
 # CONFIDENTIAL AND PROPRIETARY
 # 
@@ -13,24 +13,70 @@
 
 # expected fields in the configuration file for this app
 configuration:
-    name:
+
+    default_node_name:
         type: str
         description: >
-            A human readable name to display in the HDA to allow selection of this
-            set of configuration options in Houdini.
+            A default name for Alembic output nodes created in houdini.
+            Allowed characters include letters, numbers, periods, dashes, or
+            underscores.
+        default_value: sgtk_alembic
 
     work_file_template:
         type: template
         description: >
-            A reference to a template which locates a Houdini work file on disk.
-            This is used to drive the version and optionally the name of output files.
-        required_fields: [version]
-        optional_fields: [name]
+            A reference to a template which locates a Houdini work file on
+            disk.  This is used to drive the version and optionally the name of
+            output files.
+        fields: context, version, [name]
 
-    work_cache_template:
-        type: template
-        required_fields: [version]
-        optional_fields: [name,node]
+    output_profiles:
+        type: list
+        allows_empty: False
+        description: >
+            A list of dictionaries defining the various alembic output
+            profiles. Each profile contains a unique name that describes the
+            profile, the cach template for writing to disk, a color to
+            distinguish each profile type in the node graph, and optional
+            settings to apply to the internal Alembic node.
+            
+        values: 
+            type: dict
+            description: > 
+                An output profile dictionary that defines how the Tk Alembic
+                node should look in houdini and where it should write its
+                cache.
+            items:
+                name:
+                    type: str
+                    description: >
+                        A human readable name describing this output profile.
+
+                settings:
+                    type: dict
+                    description: >
+                        A dictionary of settings to apply to the internal
+                        Alembic node when this profile is selected.
+
+                color:
+                    type: list     
+                    description: >
+                        Specify a list of 3 values in the range 0-255 that
+                        represent the RGB values to be set for the node
+                        background/tile_color in the node graph when this
+                        profile is used. Specify an empty list to use the
+                        default colour.
+                    values:
+                        type: int
+                    allows_empty: True
+                    default_value: []
+
+                output_cache_template:
+                    type: template
+                    description: >
+                        A reference to a template which defines where the
+                        alembic cache will be written to disk. 
+                    fields: context, version, [name], [node]
 
 
 # the Shotgun fields that this app needs in order to operate correctly
