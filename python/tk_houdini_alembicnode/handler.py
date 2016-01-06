@@ -371,11 +371,13 @@ class TkAlembicNodeHandler(object):
         if color:
             node.setColor(hou.Color(color))
 
-        # trigger a redraw of the output path parm to get the menu to update.
-        # There is probably a better way to do this. if so, please update.
-        node.parm(self.NODE_OUTPUT_PATH_PARM).disable(True)
-        node.parm(self.NODE_OUTPUT_PATH_PARM).disable(False)
+        self.refresh_output_path(node)
 
+    # refresh the output profile path
+    def refresh_output_path(self, node):
+
+        output_path_parm = node.parm(self.NODE_OUTPUT_PATH_PARM)
+        output_path_parm.set(output_path_parm.eval())
 
     # open a file browser showing the render path of the current node
     def show_in_fs(self):
