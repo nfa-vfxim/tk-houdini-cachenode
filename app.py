@@ -67,4 +67,47 @@ class TkAlembicNodeApp(sgtk.platform.Application):
         tk_houdini_alembic.TkAlembicNodeHandler.\
             convert_back_to_tk_alembic_nodes(self)
 
+    def get_nodes(self):
+        """
+        Returns a list of hou.node objects for each tk alembic node.
 
+        Example usage::
+
+        >>> import sgtk
+        >>> eng = sgtk.platform.current_engine()
+        >>> app = eng.apps["tk-houdini-alembicnode"]
+        >>> tk_alembic_nodes = app.get_nodes()
+        """
+
+        self.log_debug("Retrieving tk-houdini-alembic nodes...")
+        tk_houdini_alembic = self.import_module("tk_houdini_alembicnode")
+        nodes = tk_houdini_alembic.TkAlembicNodeHandler.\
+            get_all_tk_alembic_nodes()
+        self.log_debug("Found %s tk-houdini-alembic nodes." % (len(nodes),))
+        return nodes
+
+    def get_output_path(self, node):
+        """
+        Returns the evaluated output path for the supplied node.
+
+        Example usage::
+
+        >>> import sgtk
+        >>> eng = sgtk.platform.current_engine()
+        >>> app = eng.apps["tk-houdini-alembicnode"]
+        >>> output_path = app.get_output_path(tk_alembic_node)
+        """
+
+        self.log_debug("Retrieving output path for %s" % (node,))
+        tk_houdini_alembic = self.import_module("tk_houdini_alembicnode")
+        output_path = tk_houdini_alembic.TkAlembicNodeHandler.\
+            get_output_path(node)
+        self.log_debug("Retrieved output path: %s" % (output_path,))
+        return output_path
+
+    def get_work_file_template(self):
+        """
+        Returns the configured work file template for the app.
+        """
+
+        return self.get_template("work_file_template")

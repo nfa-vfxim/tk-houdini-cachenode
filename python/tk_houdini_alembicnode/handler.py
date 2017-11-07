@@ -164,7 +164,6 @@ class TkAlembicNodeHandler(object):
             app.log_debug("Converted: Alembic node '%s' to TK Alembic node."
                 % (alembic_node_name,))
 
-
     @classmethod
     def convert_to_regular_alembic_nodes(cls, app):
         """Convert Toolkit Alembic nodes to regular Alembic nodes.
@@ -253,6 +252,35 @@ class TkAlembicNodeHandler(object):
             app.log_debug("Converted: Tk Alembic node '%s' to Alembic node."
                 % (tk_alembic_node_name,))
 
+    @classmethod
+    def get_all_tk_alembic_nodes(cls):
+        """
+        Returns a list of all tk-houdini-alembicnode instances in the current
+        session.
+        """
+
+        tk_node_type = TkAlembicNodeHandler.TK_ALEMBIC_NODE_TYPE
+
+        # get all instances of tk alembic rop/sop nodes
+        tk_alembic_nodes = []
+        tk_alembic_nodes.extend(
+            hou.nodeType(hou.sopNodeTypeCategory(),
+                         tk_node_type).instances())
+        tk_alembic_nodes.extend(
+            hou.nodeType(hou.ropNodeTypeCategory(),
+                         tk_node_type).instances())
+
+        return tk_alembic_nodes
+
+    @classmethod
+    def get_output_path(cls, node):
+        """
+        Returns the evaluated output path for the supplied node.
+        """
+
+        output_parm = node.parm(cls.NODE_OUTPUT_PATH_PARM)
+        path = output_parm.menuLabels()[output_parm.eval()]
+        return path
 
     ############################################################################
     # Instance methods
