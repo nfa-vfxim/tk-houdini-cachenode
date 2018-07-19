@@ -391,7 +391,7 @@ class TkAlembicNodeHandler(object):
         settings = output_profile["settings"]
         if settings:
             self._app.log_debug('Populating format settings: %s' % 
-                (file_settings,))
+                (settings,))
             node.setParms(settings)
 
         # set the node color
