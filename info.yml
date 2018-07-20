@@ -61,13 +61,13 @@ configuration:
                 color:
                     type: list     
                     description: >
-                        Specify a list of 3 values in the range 0-255 that
+                        Specify a list of 3 values in the range 0.0-1.0 that
                         represent the RGB values to be set for the node
                         background/tile_color in the node graph when this
                         profile is used. Specify an empty list to use the
                         default colour.
                     values:
-                        type: int
+                        type: float
                     allows_empty: True
                     default_value: []
 
