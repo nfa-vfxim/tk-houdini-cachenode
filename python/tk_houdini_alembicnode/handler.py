@@ -635,7 +635,21 @@ def _copy_parm_values(source_node, target_node, excludes=None):
                 target_parm.set(source_parm.unexpandedString())
             # copy the evaluated value
             else:
-                target_parm.set(source_parm.eval())
+                try:
+                    target_parm.set(source_parm.eval())
+                except TypeError:
+                    # The pre- and post-script type comboboxes changed sometime around
+                    # 16.5.439 to being string type parms that take the name of the language
+                    # (hscript or python) instead of an integer index of the combobox item
+                    # that's selected. To support both, we try the old way (which is how our
+                    # otl is setup to work), and if that fails we then fall back on mapping
+                    # the integer index from our otl's parm over to the string language name
+                    # that the alembic node is expecting.
+                    if source_parm.name().startswith("lpre") or source_parm.name().startswith("lpost"):
+                        value_map = ["hscript", "python"]
+                        target_parm.set(value_map[source_parm.eval()])
+                    else:
+                        raise
 
 
 # return the menu label for the supplied parameter
