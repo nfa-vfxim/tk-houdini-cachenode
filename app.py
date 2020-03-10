@@ -1,11 +1,11 @@
 # Copyright (c) 2015 Shotgun Software Inc.
-# 
+#
 # CONFIDENTIAL AND PROPRIETARY
-# 
-# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
 # Source Code License included in this distribution package. See LICENSE.
-# By accessing, using, copying or modifying this work you indicate your 
-# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 """
@@ -26,7 +26,7 @@ class TkAlembicNodeApp(sgtk.platform.Application):
 
     def convert_to_regular_alembic_nodes(self):
         """Convert Toolkit Alembic nodes to regular Alembic nodes.
-        
+
         Convert all Toolkit Alembic nodes found in the current script to
         regular Alembic nodes. Additional Toolkit information will be stored in
         user data named 'tk_*'
@@ -40,15 +40,13 @@ class TkAlembicNodeApp(sgtk.platform.Application):
 
         """
 
-        self.log_debug(
-            "Converting Toolkit Alembic nodes to built-in Alembic nodes.")
+        self.log_debug("Converting Toolkit Alembic nodes to built-in Alembic nodes.")
         tk_houdini_alembic = self.import_module("tk_houdini_alembicnode")
-        tk_houdini_alembic.TkAlembicNodeHandler.\
-            convert_to_regular_alembic_nodes(self)
+        tk_houdini_alembic.TkAlembicNodeHandler.convert_to_regular_alembic_nodes(self)
 
     def convert_back_to_tk_alembic_nodes(self):
         """Convert regular Alembic nodes back to Tooklit Alembic nodes.
-        
+
         Convert any regular Alembic nodes that were previously converted
         from Tooklit Alembic nodes back into Toolkit Alembic nodes.
 
@@ -62,10 +60,10 @@ class TkAlembicNodeApp(sgtk.platform.Application):
         """
 
         self.log_debug(
-            "Converting built-in Alembic nodes back to Toolkit Alembic nodes.")
+            "Converting built-in Alembic nodes back to Toolkit Alembic nodes."
+        )
         tk_houdini_alembic = self.import_module("tk_houdini_alembicnode")
-        tk_houdini_alembic.TkAlembicNodeHandler.\
-            convert_back_to_tk_alembic_nodes(self)
+        tk_houdini_alembic.TkAlembicNodeHandler.convert_back_to_tk_alembic_nodes(self)
 
     def get_nodes(self):
         """
@@ -81,8 +79,7 @@ class TkAlembicNodeApp(sgtk.platform.Application):
 
         self.log_debug("Retrieving tk-houdini-alembic nodes...")
         tk_houdini_alembic = self.import_module("tk_houdini_alembicnode")
-        nodes = tk_houdini_alembic.TkAlembicNodeHandler.\
-            get_all_tk_alembic_nodes()
+        nodes = tk_houdini_alembic.TkAlembicNodeHandler.get_all_tk_alembic_nodes()
         self.log_debug("Found %s tk-houdini-alembic nodes." % (len(nodes),))
         return nodes
 
@@ -100,8 +97,7 @@ class TkAlembicNodeApp(sgtk.platform.Application):
 
         self.log_debug("Retrieving output path for %s" % (node,))
         tk_houdini_alembic = self.import_module("tk_houdini_alembicnode")
-        output_path = tk_houdini_alembic.TkAlembicNodeHandler.\
-            get_output_path(node)
+        output_path = tk_houdini_alembic.TkAlembicNodeHandler.get_output_path(node)
         self.log_debug("Retrieved output path: %s" % (output_path,))
         return output_path
 

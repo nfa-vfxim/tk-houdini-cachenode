@@ -15,9 +15,9 @@ import sys
 import zlib
 
 try:
-   import cPickle as pickle
+    import cPickle as pickle
 except:
-   import pickle
+    import pickle
 
 # houdini
 import hou
@@ -29,14 +29,13 @@ import sgtk
 class TkAlembicNodeHandler(object):
     """Handle Tk Alembic node operations and callbacks."""
 
-
     ############################################################################
     # Class data
 
     HOU_ROP_ALEMBIC_TYPE = "alembic"
     """Houdini type for alembic rops."""
 
-    HOU_SOP_ALEMBIC_TYPE = "rop_alembic"  
+    HOU_SOP_ALEMBIC_TYPE = "rop_alembic"
     """Houdini type for alembic sops."""
     # this is correct. the houdini internal rop_alembic is a sop.
 
@@ -54,10 +53,10 @@ class TkAlembicNodeHandler(object):
 
     TK_OUTPUT_CONNECTION_CODECS = {
         "sgtk-01": {
-            'encode': lambda data: \
-                base64.b64encode(zlib.compress(pickle.dumps(data))),
-            'decode': lambda data_str: \
-                pickle.loads(zlib.decompress(base64.b64decode(data_str))),
+            "encode": lambda data: base64.b64encode(zlib.compress(pickle.dumps(data))),
+            "decode": lambda data_str: pickle.loads(
+                zlib.decompress(base64.b64decode(data_str))
+            ),
         },
     }
     """Encode/decode schemes. To support backward compatibility if changes."""
@@ -68,7 +67,6 @@ class TkAlembicNodeHandler(object):
 
     TK_OUTPUT_PROFILE_NAME_KEY = "tk_output_profile_name"
     """The key in the user data that stores the output profile name."""
-
 
     ############################################################################
     # Class methods
@@ -86,10 +84,16 @@ class TkAlembicNodeHandler(object):
 
         # get all rop/sop alembic nodes in the session
         alembic_nodes = []
-        alembic_nodes.extend(hou.nodeType(hou.sopNodeTypeCategory(),
-            cls.HOU_SOP_ALEMBIC_TYPE).instances())
-        alembic_nodes.extend(hou.nodeType(hou.ropNodeTypeCategory(),
-            cls.HOU_ROP_ALEMBIC_TYPE).instances())
+        alembic_nodes.extend(
+            hou.nodeType(
+                hou.sopNodeTypeCategory(), cls.HOU_SOP_ALEMBIC_TYPE
+            ).instances()
+        )
+        alembic_nodes.extend(
+            hou.nodeType(
+                hou.ropNodeTypeCategory(), cls.HOU_ROP_ALEMBIC_TYPE
+            ).instances()
+        )
 
         if not alembic_nodes:
             app.log_debug("No Alembic Nodes found for conversion.")
@@ -105,14 +109,13 @@ class TkAlembicNodeHandler(object):
             user_dict = alembic_node.userDataDict()
 
             # get the output_profile from the dictionary
-            tk_output_profile_name = user_dict.get(
-                cls.TK_OUTPUT_PROFILE_NAME_KEY)
+            tk_output_profile_name = user_dict.get(cls.TK_OUTPUT_PROFILE_NAME_KEY)
 
             if not tk_output_profile_name:
                 app.log_warning(
                     "Almbic node '%s' does not have an output profile name. "
-                    "Can't convert to Tk Alembic node. Continuing." %
-                    (alembic_node.name(),)
+                    "Can't convert to Tk Alembic node. Continuing."
+                    % (alembic_node.name(),)
                 )
                 continue
 
@@ -123,17 +126,21 @@ class TkAlembicNodeHandler(object):
             # and set that item in the menu.
             try:
                 output_profile_parm = tk_alembic_node.parm(
-                    TkAlembicNodeHandler.TK_OUTPUT_PROFILE_PARM)
+                    TkAlembicNodeHandler.TK_OUTPUT_PROFILE_PARM
+                )
                 output_profile_index = output_profile_parm.menuLabels().index(
-                    tk_output_profile_name)
+                    tk_output_profile_name
+                )
                 output_profile_parm.set(output_profile_index)
             except ValueError:
-                app.log_warning("No output profile found named: %s" % 
-                    (tk_output_profile_name,))
+                app.log_warning(
+                    "No output profile found named: %s" % (tk_output_profile_name,)
+                )
 
-            # copy over all parameter values except the output path 
-            _copy_parm_values(alembic_node, tk_alembic_node,
-                excludes=[cls.NODE_OUTPUT_PATH_PARM])
+            # copy over all parameter values except the output path
+            _copy_parm_values(
+                alembic_node, tk_alembic_node, excludes=[cls.NODE_OUTPUT_PATH_PARM]
+            )
 
             # copy the inputs and move the outputs
             _copy_inputs(alembic_node, tk_alembic_node)
@@ -144,7 +151,7 @@ class TkAlembicNodeHandler(object):
             elif alembic_node.type().name() == cls.HOU_ROP_ALEMBIC_TYPE:
                 _move_outputs(alembic_node, tk_alembic_node)
 
-            # make the new node the same color. the profile will set a color, 
+            # make the new node the same color. the profile will set a color,
             # but do this just in case the user changed the color manually
             # prior to the conversion.
             tk_alembic_node.setColor(alembic_node.color())
@@ -161,8 +168,10 @@ class TkAlembicNodeHandler(object):
             tk_alembic_node.setName(alembic_node_name)
             tk_alembic_node.setPosition(alembic_node_pos)
 
-            app.log_debug("Converted: Alembic node '%s' to TK Alembic node."
-                % (alembic_node_name,))
+            app.log_debug(
+                "Converted: Alembic node '%s' to TK Alembic node."
+                % (alembic_node_name,)
+            )
 
     @classmethod
     def convert_to_regular_alembic_nodes(cls, app):
@@ -185,9 +194,11 @@ class TkAlembicNodeHandler(object):
         # get all instances of tk alembic rop/sop nodes
         tk_alembic_nodes = []
         tk_alembic_nodes.extend(
-            hou.nodeType(hou.sopNodeTypeCategory(), tk_node_type).instances())
+            hou.nodeType(hou.sopNodeTypeCategory(), tk_node_type).instances()
+        )
         tk_alembic_nodes.extend(
-            hou.nodeType(hou.ropNodeTypeCategory(), tk_node_type).instances())
+            hou.nodeType(hou.ropNodeTypeCategory(), tk_node_type).instances()
+        )
 
         if not tk_alembic_nodes:
             app.log_debug("No Toolkit Alembic Nodes found for conversion.")
@@ -202,8 +213,10 @@ class TkAlembicNodeHandler(object):
             elif tk_alembic_node.type() == rop_type:
                 alembic_operator = cls.HOU_ROP_ALEMBIC_TYPE
             else:
-                app.log_warning("Unknown type for node '%s': %s'" %
-                    (tk_alembic_node.name(), tk_alembic_node.type()))
+                app.log_warning(
+                    "Unknown type for node '%s': %s'"
+                    % (tk_alembic_node.name(), tk_alembic_node.type())
+                )
                 continue
 
             # create a new, regular Alembic node
@@ -211,21 +224,24 @@ class TkAlembicNodeHandler(object):
 
             # copy the file parms value to the new node
             filename = _get_output_menu_label(
-                tk_alembic_node.parm(cls.NODE_OUTPUT_PATH_PARM))
+                tk_alembic_node.parm(cls.NODE_OUTPUT_PATH_PARM)
+            )
             alembic_node.parm(cls.NODE_OUTPUT_PATH_PARM).set(filename)
 
             # copy across knob values
-            _copy_parm_values(tk_alembic_node, alembic_node,
-                excludes=[cls.NODE_OUTPUT_PATH_PARM])
+            _copy_parm_values(
+                tk_alembic_node, alembic_node, excludes=[cls.NODE_OUTPUT_PATH_PARM]
+            )
 
             # store the alembic output profile name in the user data so that we
             # can retrieve it later.
-            output_profile_parm = tk_alembic_node.parm(
-                cls.TK_OUTPUT_PROFILE_PARM)
-            tk_output_profile_name = \
-                output_profile_parm.menuLabels()[output_profile_parm.eval()]
-            alembic_node.setUserData(cls.TK_OUTPUT_PROFILE_NAME_KEY, 
-                tk_output_profile_name)
+            output_profile_parm = tk_alembic_node.parm(cls.TK_OUTPUT_PROFILE_PARM)
+            tk_output_profile_name = output_profile_parm.menuLabels()[
+                output_profile_parm.eval()
+            ]
+            alembic_node.setUserData(
+                cls.TK_OUTPUT_PROFILE_NAME_KEY, tk_output_profile_name
+            )
 
             # copy the inputs and move the outputs
             _copy_inputs(tk_alembic_node, alembic_node)
@@ -249,8 +265,10 @@ class TkAlembicNodeHandler(object):
             alembic_node.setName(tk_alembic_node_name)
             alembic_node.setPosition(tk_alembic_node_pos)
 
-            app.log_debug("Converted: Tk Alembic node '%s' to Alembic node."
-                % (tk_alembic_node_name,))
+            app.log_debug(
+                "Converted: Tk Alembic node '%s' to Alembic node."
+                % (tk_alembic_node_name,)
+            )
 
     @classmethod
     def get_all_tk_alembic_nodes(cls):
@@ -264,11 +282,11 @@ class TkAlembicNodeHandler(object):
         # get all instances of tk alembic rop/sop nodes
         tk_alembic_nodes = []
         tk_alembic_nodes.extend(
-            hou.nodeType(hou.sopNodeTypeCategory(),
-                         tk_node_type).instances())
+            hou.nodeType(hou.sopNodeTypeCategory(), tk_node_type).instances()
+        )
         tk_alembic_nodes.extend(
-            hou.nodeType(hou.ropNodeTypeCategory(),
-                         tk_node_type).instances())
+            hou.nodeType(hou.ropNodeTypeCategory(), tk_node_type).instances()
+        )
 
         return tk_alembic_nodes
 
@@ -287,9 +305,9 @@ class TkAlembicNodeHandler(object):
 
     def __init__(self, app):
         """Initialize the handler.
-        
-        :params app: The application instance. 
-        
+
+        :params app: The application instance.
+
         """
 
         # keep a reference to the app for easy access to templates, settings,
@@ -304,15 +322,15 @@ class TkAlembicNodeHandler(object):
             if output_profile_name in self._output_profiles:
                 self._app.log_warning(
                     "Found multiple output profiles named '%s' for the "
-                    "Tk Alembic node! Only the first one will be available." %
-                    (output_profile_name,)
+                    "Tk Alembic node! Only the first one will be available."
+                    % (output_profile_name,)
                 )
                 continue
 
             self._output_profiles[output_profile_name] = output_profile
-            self._app.log_debug("Caching alembic output profile: '%s'" % 
-                (output_profile_name,))
-
+            self._app.log_debug(
+                "Caching alembic output profile: '%s'" % (output_profile_name,)
+            )
 
     ############################################################################
     # methods and callbacks executed via the OTLs
@@ -324,29 +342,27 @@ class TkAlembicNodeHandler(object):
 
         # use Qt to copy the path to the clipboard:
         from sgtk.platform.qt import QtGui
+
         QtGui.QApplication.clipboard().setText(render_path)
 
-        self._app.log_debug(
-            "Copied render path to clipboard: %s" % (render_path,))
-
+        self._app.log_debug("Copied render path to clipboard: %s" % (render_path,))
 
     # create an Alembic node, set the path to the output path of current node
     def create_alembic_node(self):
 
         current_node = hou.pwd()
         output_path_parm = current_node.parm(self.NODE_OUTPUT_PATH_PARM)
-        alembic_node_name = 'alembic_' + current_node.name()
+        alembic_node_name = "alembic_" + current_node.name()
 
         # create the alembic node and set the filename parm
-        alembic_node = current_node.parent().createNode(
-            self.HOU_SOP_ALEMBIC_TYPE)
+        alembic_node = current_node.parent().createNode(self.HOU_SOP_ALEMBIC_TYPE)
         alembic_node.parm(self.NODE_OUTPUT_PATH_PARM).set(
-            output_path_parm.menuLabels()[output_path_parm.eval()])
+            output_path_parm.menuLabels()[output_path_parm.eval()]
+        )
         alembic_node.setName(alembic_node_name, unique_name=True)
 
         # move it away from the origin
         alembic_node.moveToGoodPosition()
-
 
     # get labels for all tk-houdini-alembic node output profiles
     def get_output_profile_menu_labels(self):
@@ -356,7 +372,6 @@ class TkAlembicNodeHandler(object):
             menu_labels.extend([count, output_profile_name])
 
         return menu_labels
-
 
     # returns a list of menu items for the current node
     def get_output_path_menu_items(self):
@@ -368,13 +383,14 @@ class TkAlembicNodeHandler(object):
         try:
             menu.append(self._compute_output_path(current_node))
         except sgtk.TankError as e:
-            error_msg = ("Unable to construct the output path menu items: " 
-                         "%s - %s" % (current_node.name(), e))
+            error_msg = "Unable to construct the output path menu items: " "%s - %s" % (
+                current_node.name(),
+                e,
+            )
             self._app.log_error(error_msg)
             menu.append("ERROR: %s" % (error_msg,))
 
         return menu
-
 
     # apply the selected profile in the session
     def set_profile(self, node=None):
@@ -384,14 +400,14 @@ class TkAlembicNodeHandler(object):
 
         output_profile = self._get_output_profile(node)
 
-        self._app.log_debug("Applying tk alembic node profile: %s" % 
-            (output_profile["name"],))
+        self._app.log_debug(
+            "Applying tk alembic node profile: %s" % (output_profile["name"],)
+        )
 
         # apply the supplied settings to the node
         settings = output_profile["settings"]
         if settings:
-            self._app.log_debug('Populating format settings: %s' % 
-                (settings,))
+            self._app.log_debug("Populating format settings: %s" % (settings,))
             node.setParms(settings)
 
         # set the node color
@@ -435,8 +451,7 @@ class TkAlembicNodeHandler(object):
             rendered_files = self._get_rendered_files(current_node)
 
             if not rendered_files:
-                msg = ("Unable to find rendered files for node '%s'." 
-                       % (current_node,))
+                msg = "Unable to find rendered files for node '%s'." % (current_node,)
                 self._app.log_error(msg)
                 hou.ui.displayMessage(msg)
                 return
@@ -450,11 +465,11 @@ class TkAlembicNodeHandler(object):
 
             # run the app
             if system == "linux2":
-                cmd = "xdg-open \"%s\"" % render_dir
+                cmd = 'xdg-open "%s"' % render_dir
             elif system == "darwin":
                 cmd = "open '%s'" % render_dir
             elif system == "win32":
-                cmd = "cmd.exe /C start \"Folder\" \"%s\"" % render_dir
+                cmd = 'cmd.exe /C start "Folder" "%s"' % render_dir
             else:
                 msg = "Platform '%s' is not supported." % (system,)
                 self._app.log_error(msg)
@@ -466,11 +481,10 @@ class TkAlembicNodeHandler(object):
                 msg = "Failed to launch '%s'!" % (cmd,)
                 hou.ui.displayMessage(msg)
 
-
     # called when the node is created.
     def setup_node(self, node):
 
-        default_name = self._app.get_setting('default_node_name')
+        default_name = self._app.get_setting("default_node_name")
         node.setName(default_name, unique_name=True)
 
         # apply the default profile
@@ -481,7 +495,6 @@ class TkAlembicNodeHandler(object):
         except:
             # ingore any errors. ex: metrics logging not supported
             pass
-
 
     ############################################################################
     # Private methods
@@ -500,7 +513,8 @@ class TkAlembicNodeHandler(object):
 
         # Get the cache templates from the app
         output_cache_template = self._app.get_template_by_name(
-            output_profile["output_cache_template"])
+            output_profile["output_cache_template"]
+        )
 
         # create fields dict with all the metadata
         fields = {
@@ -511,14 +525,12 @@ class TkAlembicNodeHandler(object):
             "version": work_file_fields.get("version", None),
         }
 
-        fields.update(self._app.context.as_template_fields(
-            output_cache_template))
+        fields.update(self._app.context.as_template_fields(output_cache_template))
 
         path = output_cache_template.apply_fields(fields)
         path = path.replace(os.path.sep, "/")
 
         return path
-
 
     # get the current output profile
     def _get_output_profile(self, node=None):
@@ -527,12 +539,12 @@ class TkAlembicNodeHandler(object):
             node = hou.pwd()
 
         output_profile_parm = node.parm(self.TK_OUTPUT_PROFILE_PARM)
-        output_profile_name = \
-            output_profile_parm.menuLabels()[output_profile_parm.eval()]
+        output_profile_name = output_profile_parm.menuLabels()[
+            output_profile_parm.eval()
+        ]
         output_profile = self._output_profiles[output_profile_name]
 
         return output_profile
-            
 
     # extract fields from current Houdini file using the workfile template
     def _get_hipfile_fields(self):
@@ -540,19 +552,16 @@ class TkAlembicNodeHandler(object):
 
         work_fields = {}
         work_file_template = self._app.get_template("work_file_template")
-        if (work_file_template and 
-            work_file_template.validate(current_file_path)):
+        if work_file_template and work_file_template.validate(current_file_path):
             work_fields = work_file_template.get_fields(current_file_path)
 
         return work_fields
-
 
     # get the render path from current item in the output path parm menu
     def _get_render_path(self, node):
         output_parm = node.parm(self.NODE_OUTPUT_PATH_PARM)
         path = output_parm.menuLabels()[output_parm.eval()]
         return path
-
 
     # returns the files on disk associated with this node
     def _get_rendered_files(self, node):
@@ -563,21 +572,24 @@ class TkAlembicNodeHandler(object):
 
         # get the output cache template for the current profile
         output_cache_template = self._app.get_template_by_name(
-            output_profile["output_cache_template"])
+            output_profile["output_cache_template"]
+        )
 
         if not output_cache_template.validate(file_name):
-            msg = ("Unable to validate files on disk for node %s."
-                   "The path '%s' is not recognized by Shotgun."
-                   % (node.name(), file_name))
+            msg = (
+                "Unable to validate files on disk for node %s."
+                "The path '%s' is not recognized by Shotgun." % (node.name(), file_name)
+            )
             self._app.log_error(msg)
             return []
-            
+
         fields = output_cache_template.get_fields(file_name)
 
         # get the actual file paths based on the template. Ignore any sequence
         # or eye fields
         return self._app.tank.paths_from_template(
-            output_cache_template, fields, ["SEQ", "eye"])
+            output_cache_template, fields, ["SEQ", "eye"]
+        )
 
 
 ################################################################################
@@ -594,10 +606,9 @@ def _copy_inputs(source_node, target_node):
             "Not enough inputs on target node. Cannot copy inputs from "
             "'%s' to '%s'" % (source_node, target_node)
         )
-        
+
     for connection in input_connections:
-        target_node.setInput(connection.inputIndex(),
-            connection.inputNode())
+        target_node.setInput(connection.inputIndex(), connection.inputNode())
 
 
 # Copy parameter values of the source node to those of the target node if a
@@ -608,8 +619,7 @@ def _copy_parm_values(source_node, target_node, excludes=None):
         excludes = []
 
     # build a parameter list from the source node, ignoring the excludes
-    source_parms = [
-        parm for parm in source_node.parms() if parm.name() not in excludes]
+    source_parms = [parm for parm in source_node.parms() if parm.name() not in excludes]
 
     for source_parm in source_parms:
 
@@ -645,7 +655,9 @@ def _copy_parm_values(source_node, target_node, excludes=None):
                     # otl is setup to work), and if that fails we then fall back on mapping
                     # the integer index from our otl's parm over to the string language name
                     # that the alembic node is expecting.
-                    if source_parm.name().startswith("lpre") or source_parm.name().startswith("lpost"):
+                    if source_parm.name().startswith(
+                        "lpre"
+                    ) or source_parm.name().startswith("lpost"):
                         value_map = ["hscript", "python"]
                         target_parm.set(value_map[source_parm.eval()])
                     else:
@@ -656,10 +668,10 @@ def _copy_parm_values(source_node, target_node, excludes=None):
 def _get_output_menu_label(parm):
     if parm.menuItems()[parm.eval()] == "sgtk":
         # evaluated sgtk path from item
-        return parm.menuLabels()[parm.eval()] 
+        return parm.menuLabels()[parm.eval()]
     else:
         # output path from menu label
-        return parm.menuItems()[parm.eval()] 
+        return parm.menuItems()[parm.eval()]
 
 
 # move all the output connections from the source node to the target node
@@ -681,15 +693,15 @@ def _save_outputs_to_user_data(source_node, target_node):
     outputs = []
     for connection in output_connections:
         output_dict = {
-            'node': connection.outputNode().path(),
-            'input': connection.inputIndex(),
+            "node": connection.outputNode().path(),
+            "input": connection.inputIndex(),
         }
         outputs.append(output_dict)
 
     # get the current encoder for the handler
     handler_cls = TkAlembicNodeHandler
     codecs = handler_cls.TK_OUTPUT_CONNECTION_CODECS
-    encoder = codecs[handler_cls.TK_OUTPUT_CONNECTION_CODEC]['encode']
+    encoder = codecs[handler_cls.TK_OUTPUT_CONNECTION_CODEC]["encode"]
 
     # encode and prepend the current codec name
     data_str = handler_cls.TK_OUTPUT_CONNECTION_CODEC + ":" + encoder(outputs)
@@ -701,8 +713,7 @@ def _save_outputs_to_user_data(source_node, target_node):
 # restore output connections from this node to the target node.
 def _restore_outputs_from_user_data(source_node, target_node):
 
-    data_str = source_node.userData(
-        TkAlembicNodeHandler.TK_OUTPUT_CONNECTIONS_KEY)
+    data_str = source_node.userData(TkAlembicNodeHandler.TK_OUTPUT_CONNECTIONS_KEY)
 
     if not data_str:
         return
@@ -710,12 +721,12 @@ def _restore_outputs_from_user_data(source_node, target_node):
     # parse the data str to determine the codec used
     sep_index = data_str.find(":")
     codec_name = data_str[:sep_index]
-    data_str = data_str[sep_index + 1:]
+    data_str = data_str[sep_index + 1 :]
 
     # get the matching decoder based on the codec name
     handler_cls = TkAlembicNodeHandler
     codecs = handler_cls.TK_OUTPUT_CONNECTION_CODECS
-    decoder = codecs[codec_name]['decode']
+    decoder = codecs[codec_name]["decode"]
 
     # decode the data str back into original python objects
     outputs = decoder(data_str)
@@ -724,6 +735,5 @@ def _restore_outputs_from_user_data(source_node, target_node):
         return
 
     for connection in outputs:
-        output_node = hou.node(connection['node'])
-        output_node.setInput(connection['input'], target_node)
-
+        output_node = hou.node(connection["node"])
+        output_node.setInput(connection["input"], target_node)

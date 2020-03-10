@@ -1,11 +1,11 @@
 # Copyright (c) 2015 Shotgun Software Inc.
-# 
+#
 # CONFIDENTIAL AND PROPRIETARY
-# 
-# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
 # Source Code License included in this distribution package. See LICENSE.
-# By accessing, using, copying or modifying this work you indicate your 
-# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
 # not expressly granted therein are reserved by Shotgun Software Inc.
 # ----------------------------------------------------
 #
@@ -39,10 +39,10 @@ configuration:
             profile, the cach template for writing to disk, a color to
             distinguish each profile type in the node graph, and optional
             settings to apply to the internal Alembic node.
-            
-        values: 
+
+        values:
             type: dict
-            description: > 
+            description: >
                 An output profile dictionary that defines how the Tk Alembic
                 node should look in houdini and where it should write its
                 cache.
@@ -59,7 +59,7 @@ configuration:
                         Alembic node when this profile is selected.
 
                 color:
-                    type: list     
+                    type: list
                     description: >
                         Specify a list of 3 values in the range 0.0-1.0 that
                         represent the RGB values to be set for the node
@@ -75,14 +75,14 @@ configuration:
                     type: template
                     description: >
                         A reference to a template which defines where the
-                        alembic cache will be written to disk. 
+                        alembic cache will be written to disk.
                     fields: context, version, [name], [node]
 
 
 # the Shotgun fields that this app needs in order to operate correctly
 requires_shotgun_fields:
 
-# More verbose description of this item 
+# More verbose description of this item
 display_name: "Alembic Output Node"
 description: "Support for the Toolkit Alembic output node in Houdini."
 
@@ -95,4 +95,4 @@ requires_engine_version: "v0.2.0"
 supported_engines: [tk-houdini]
 
 # the frameworks required to run this app
-frameworks: 
+frameworks:
