@@ -14,10 +14,7 @@ import os
 import sys
 import zlib
 
-try:
-    import cPickle as pickle
-except:
-    import pickle
+from sgtk.util import pickle
 
 # houdini
 import hou
@@ -461,17 +458,16 @@ class TkAlembicNodeHandler(object):
         # if we have a valid render path then show it:
         if render_dir:
             # TODO: move to utility method in core
-            system = sys.platform
 
             # run the app
-            if system == "linux2":
+            if sgtk.util.is_linux():
                 cmd = 'xdg-open "%s"' % render_dir
-            elif system == "darwin":
+            elif sgtk.util.is_macos():
                 cmd = "open '%s'" % render_dir
-            elif system == "win32":
+            elif sgtk.util.is_windows():
                 cmd = 'cmd.exe /C start "Folder" "%s"' % render_dir
             else:
-                msg = "Platform '%s' is not supported." % (system,)
+                msg = "Platform '%s' is not supported." % (sys.platform)
                 self._app.log_error(msg)
                 hou.ui.displayMessage(msg)
 
