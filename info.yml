@@ -89,7 +89,7 @@ description: "Support for the Toolkit Alembic output node in Houdini."
 # Required minimum versions for this item to run
 requires_shotgun_version:
 requires_core_version: "v0.12.5"
-requires_engine_version: "v0.2.0"
+requires_engine_version: "v1.7.1"
 
 # the engines that this app can operate in:
 supported_engines: [tk-houdini]
