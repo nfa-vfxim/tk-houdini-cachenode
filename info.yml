@@ -83,8 +83,8 @@ configuration:
 requires_shotgun_fields:
 
 # More verbose description of this item
-display_name: "Alembic Output Node"
-description: "Support for the Toolkit Alembic output node in Houdini."
+display_name: "File Cache Output Node"
+description: "Support for the Toolkit file cache output node in Houdini."
 
 # Required minimum versions for this item to run
 requires_shotgun_version:
