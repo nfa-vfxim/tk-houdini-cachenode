@@ -1,6 +1,0 @@
-[packaging]
-exclude=
-    # Remove otl doc files
-    otls/forbid_linking.png
-    otls/move_parameter.png
-    otls/README.md
