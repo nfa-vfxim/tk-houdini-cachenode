@@ -16,7 +16,7 @@ class TkCacheNodeHandler(object):
     # handle all callbacks and operations for the file cache node app
 
     # the name of the output path parameter on the node
-    NODE_OUTPUT_PATH_PARM = "path"
+    NODE_OUTPUT_PATH_PARM = "file"
 
     def __init__(self, app):
 
@@ -43,32 +43,7 @@ class TkCacheNodeHandler(object):
 
         return menu
 
-    # apply the selected profile in the session
-    def set_profile(self, node=None):
-
-        if not node:
-            node = hou.pwd()
-
-        output_profile = self._get_output_profile(node)
-
-        self._app.log_debug(
-            "Applying tk alembic node profile: %s" % (output_profile["name"],)
-        )
-
-        # apply the supplied settings to the node
-        settings = output_profile["settings"]
-        if settings:
-            self._app.log_debug("Populating format settings: %s" % (settings,))
-            node.setParms(settings)
-
-        # set the node color
-        color = output_profile["color"]
-        if color:
-            node.setColor(hou.Color(color))
-
-        self.refresh_output_path(node)
-
-    # refresh the output profile path
+    # refresh the output path
     def refresh_output_path(self, node):
 
         output_path_parm = node.parm(self.NODE_OUTPUT_PATH_PARM)
@@ -121,20 +96,6 @@ class TkCacheNodeHandler(object):
 
         return path
 
-    # get the current output profile
-    def _get_output_profile(self, node=None):
-
-        if not node:
-            node = hou.pwd()
-
-        output_profile_parm = node.parm(self.TK_OUTPUT_PROFILE_PARM)
-        output_profile_name = output_profile_parm.menuLabels()[
-            output_profile_parm.eval()
-        ]
-        output_profile = self._output_profiles[output_profile_name]
-
-        return output_profile
-
     # extract fields from current Houdini file using the workfile template
     def _get_hipfile_fields(self):
         current_file_path = hou.hipFile.path()
@@ -157,11 +118,9 @@ class TkCacheNodeHandler(object):
 
         file_name = self._get_render_path(node)
 
-        output_profile = self._get_output_profile(node)
-
         # get the output cache template for the current profile
-        output_cache_template = self._app.get_template_by_name(
-            output_profile["output_cache_template"]
+        output_cache_template = self._app.get_template(
+            "output_cache_template"
         )
 
         if not output_cache_template.validate(file_name):
