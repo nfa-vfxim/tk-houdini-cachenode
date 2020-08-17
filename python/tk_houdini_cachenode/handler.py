@@ -1,3 +1,6 @@
 import sgtk
+import hou
 
-class TkCacheNodeHandler():
+class TkCacheNodeHandler(object):
+    def get_output_path_menu_items():
+        
