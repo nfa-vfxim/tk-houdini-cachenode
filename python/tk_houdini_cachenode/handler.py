@@ -74,63 +74,6 @@ class TkCacheNodeHandler(object):
         output_path_parm = node.parm(self.NODE_OUTPUT_PATH_PARM)
         output_path_parm.set(output_path_parm.eval())
 
-    # open a file browser showing the render path of the current node
-    def show_in_fs(self):
-
-        # retrieve the calling node
-        current_node = hou.pwd()
-        if not current_node:
-            return
-
-        render_dir = None
-
-        # first, try to just use the current cached path:
-        render_path = self._get_render_path(current_node)
-
-        if render_path:
-            # the above method returns houdini style slashes, so ensure these
-            # are pointing correctly
-            render_path = render_path.replace("/", os.path.sep)
-
-            dir_name = os.path.dirname(render_path)
-            if os.path.exists(dir_name):
-                render_dir = dir_name
-
-        if not render_dir:
-            # render directory doesn't exist so try using location
-            # of rendered frames instead:
-            rendered_files = self._get_rendered_files(current_node)
-
-            if not rendered_files:
-                msg = "Unable to find rendered files for node '%s'." % (current_node,)
-                self._app.log_error(msg)
-                hou.ui.displayMessage(msg)
-                return
-            else:
-                render_dir = os.path.dirname(rendered_files[0])
-
-        # if we have a valid render path then show it:
-        if render_dir:
-            # TODO: move to utility method in core
-
-            # run the app
-            if sgtk.util.is_linux():
-                cmd = 'xdg-open "%s"' % render_dir
-            elif sgtk.util.is_macos():
-                cmd = "open '%s'" % render_dir
-            elif sgtk.util.is_windows():
-                cmd = 'cmd.exe /C start "Folder" "%s"' % render_dir
-            else:
-                msg = "Platform '%s' is not supported." % (sys.platform)
-                self._app.log_error(msg)
-                hou.ui.displayMessage(msg)
-
-            self._app.log_debug("Executing command:\n '%s'" % (cmd,))
-            exit_code = os.system(cmd)
-            if exit_code != 0:
-                msg = "Failed to launch '%s'!" % (cmd,)
-                hou.ui.displayMessage(msg)
-
     # called when the node is created.
     def setup_node(self, node):
 
@@ -159,12 +102,8 @@ class TkCacheNodeHandler(object):
             msg = "This Houdini file is not a Shotgun Toolkit work file!"
             raise sgtk.TankError(msg)
 
-        output_profile = self._get_output_profile(node)
-
         # Get the cache templates from the app
-        output_cache_template = self._app.get_template_by_name(
-            output_profile["output_cache_template"]
-        )
+        output_cache_template = self._app.get_template("output_cache_template")
 
         # create fields dict with all the metadata
         fields = {
