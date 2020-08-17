@@ -1,1 +1,4 @@
 .vscode
+
+# discard houdini backups
+otls/backup

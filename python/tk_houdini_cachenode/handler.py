@@ -43,26 +43,23 @@ class TkCacheNodeHandler(object):
 
         return menu
 
-    # refresh the output path
-    def refresh_output_path(self, node):
-
-        output_path_parm = node.parm(self.NODE_OUTPUT_PATH_PARM)
-        output_path_parm.set(output_path_parm.eval())
-
     # called when the node is created.
     def setup_node(self, node):
 
-        default_name = self._app.get_setting("default_node_name")
-        node.setName(default_name, unique_name=True)
-
-        # apply the default profile
-        self.set_profile(node)
+        # apply path
+        self.refresh_output_path(node)
 
         try:
             self._app.log_metric("Create", log_version=True)
         except:
             # ingore any errors. ex: metrics logging not supported
             pass
+
+    # refresh the output path
+    def refresh_output_path(self, node):
+
+        output_path_parm = node.parm(self.NODE_OUTPUT_PATH_PARM)
+        output_path_parm.set(output_path_parm.eval())
 
     ############################################################################
     # Private methods
