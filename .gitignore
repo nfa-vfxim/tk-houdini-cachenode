@@ -1,4 +1,8 @@
+# discard vscode lint settings
 .vscode
 
 # discard houdini backups
 otls/backup
+
+# discard test hips
+hip
