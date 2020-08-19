@@ -3,15 +3,20 @@ import hou
 import os
 
 class TkCacheNodeHandler(object):
-    
-    labelParameter = hou.parm
 
-
-    def getOutputPath(self, node):
+    def setupNode(self, node):
         
-        # get the output path from template
+        # get parameters and computed output path
+        path = node.parm("path")
+        pathString = node.parm("pathString")
+        outputPath = self._computeOutputPath(node)
 
-        return path
+        try:
+            pathString.set(outputPath)
+            path.set(outputPath)
+        except:
+            e = "The output path could not be calculated!"
+            raise sgkt.TankError(e)
 
     # private methods
     
