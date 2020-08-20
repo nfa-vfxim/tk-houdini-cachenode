@@ -6,3 +6,9 @@ otls/backup
 
 # discard test hips
 hip
+
+# discard test folder
+test
+
+# discard all pyc files
+*.pyc

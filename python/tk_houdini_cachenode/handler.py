@@ -1,8 +1,11 @@
-import sgkt
+import sgtk
 import hou
 import os
 
 class TkCacheNodeHandler(object):
+
+    def __init__(self, app):
+        self._app = app
 
     def setupNode(self, node):
         
@@ -16,7 +19,7 @@ class TkCacheNodeHandler(object):
             path.set(outputPath)
         except:
             e = "The output path could not be calculated!"
-            raise sgkt.TankError(e)
+            raise sgtk.TankError(e)
 
     # private methods
     
