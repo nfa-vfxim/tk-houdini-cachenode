@@ -4,6 +4,9 @@ import os
 
 class TkCacheNodeHandler(object):
 
+    TK_CACHE_NODE_TYPE = "sgtk_cache"
+    NODE_OUTPUT_PATH_PARM = "pathString"
+
     def __init__(self, app):
         self._app = app
 
@@ -20,6 +23,35 @@ class TkCacheNodeHandler(object):
         except:
             e = "The output path could not be calculated!"
             raise sgtk.TankError(e)
+
+    @classmethod
+    def get_nodes(cls):
+        """
+        Returns a list of all tk-houdini-cachenode instances in the current
+        session.
+        """
+
+        tk_node_type = TkCacheNodeHandler.TK_CACHE_NODE_TYPE
+
+        # get all instances of tk alembic rop/sop nodes
+        
+        tk_cache_nodes = []
+
+        tk_cache_nodes.extend(
+            hou.nodeType(hou.sopNodeTypeCategory(), tk_node_type).instances()
+        )
+
+        return tk_cache_nodes
+
+    @classmethod
+    def get_output_path(cls,node):
+        """
+        Returns the evaluated output path for the supplied node.
+        """
+
+        output_parm = node.parm(cls.NODE_OUTPUT_PATH_PARM)
+        path = output_parm.eval()
+        return path
 
     # private methods
     
