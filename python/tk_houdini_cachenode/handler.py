@@ -1,6 +1,7 @@
 import sgtk
 import hou
 import os
+import re
 
 class TkCacheNodeHandler(object):
 
@@ -16,10 +17,11 @@ class TkCacheNodeHandler(object):
         path = node.parm("path")
         pathString = node.parm("pathString")
         outputPath = self._computeOutputPath(node)
+        outputLabel = os.path.split(outputPath)[1]
 
         try:
             pathString.set(outputPath)
-            path.set(outputPath)
+            path.set(outputLabel)
         except:
             e = "The output path could not be calculated!"
             raise sgtk.TankError(e)

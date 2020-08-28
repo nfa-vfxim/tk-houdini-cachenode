@@ -13,7 +13,7 @@ configuration:
         description: >
             A reference to a template which defines where the
             bgeo cache will be written to disk.
-        fields: context, version, [name], [node]
+        fields: context, version, *
 
 
 requires_shotgun_fields:
