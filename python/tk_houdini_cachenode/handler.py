@@ -78,6 +78,10 @@ class TkCacheNodeHandler(object):
         # get relevant fields from the current file path
         work_file_fields = self._getHipfileFields()
 
+        # get name attribute from node
+        parm = node.parm("description")
+        name = parm.eval()
+
         if not work_file_fields:
             msg = "This Houdini file is not a Shotgun Toolkit work file!"
             raise sgtk.TankError(msg)
@@ -89,6 +93,7 @@ class TkCacheNodeHandler(object):
         fields = {
             "SEQ": "FORMAT: $F",
             "version": work_file_fields.get("version", None),
+            "name": name,
         }
 
         # update those fields with the output template
