@@ -15,6 +15,13 @@ configuration:
             bgeo cache will be written to disk.
         fields: context, version, name, *
 
+    output_publish_template:
+        type: template
+        description: >
+            A reference to a template which defines where the published
+            bgeo cache will be copied to.
+        fields: context, version, name, *
+
 
 requires_shotgun_fields:
 

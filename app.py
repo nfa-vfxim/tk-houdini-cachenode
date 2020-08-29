@@ -49,3 +49,10 @@ class TkCacheNodeApp(sgtk.platform.Application):
         """
 
         return self.get_template("work_file_template")
+
+    def get_publish_file_template(self):
+        """
+        Returns the configured publish file template for the app.
+        """
+
+        return self.get_template("output_publish_template")
