@@ -1,8 +1,12 @@
 import sgtk
 import hou
 import os
+import re
 
 class TkCacheNodeHandler(object):
+
+    TK_CACHE_NODE_TYPE = "sgtk_cache"
+    NODE_OUTPUT_PATH_PARM = "pathString"
 
     def __init__(self, app):
         self._app = app
@@ -13,13 +17,43 @@ class TkCacheNodeHandler(object):
         path = node.parm("path")
         pathString = node.parm("pathString")
         outputPath = self._computeOutputPath(node)
+        outputLabel = os.path.split(outputPath)[1]
 
         try:
             pathString.set(outputPath)
-            path.set(outputPath)
+            path.set(outputLabel)
         except:
             e = "The output path could not be calculated!"
             raise sgtk.TankError(e)
+
+    @classmethod
+    def get_nodes(cls):
+        """
+        Returns a list of all tk-houdini-cachenode instances in the current
+        session.
+        """
+
+        tk_node_type = TkCacheNodeHandler.TK_CACHE_NODE_TYPE
+
+        # get all instances of tk alembic rop/sop nodes
+        
+        tk_cache_nodes = []
+
+        tk_cache_nodes.extend(
+            hou.nodeType(hou.sopNodeTypeCategory(), tk_node_type).instances()
+        )
+
+        return tk_cache_nodes
+
+    @classmethod
+    def get_output_path(cls,node):
+        """
+        Returns the evaluated output path for the supplied node.
+        """
+
+        output_parm = node.parm(cls.NODE_OUTPUT_PATH_PARM)
+        path = output_parm.eval()
+        return path
 
     # private methods
     
@@ -44,6 +78,10 @@ class TkCacheNodeHandler(object):
         # get relevant fields from the current file path
         work_file_fields = self._getHipfileFields()
 
+        # get name attribute from node
+        parm = node.parm("description")
+        name = parm.eval()
+
         if not work_file_fields:
             msg = "This Houdini file is not a Shotgun Toolkit work file!"
             raise sgtk.TankError(msg)
@@ -55,6 +93,7 @@ class TkCacheNodeHandler(object):
         fields = {
             "SEQ": "FORMAT: $F",
             "version": work_file_fields.get("version", None),
+            "name": name,
         }
 
         # update those fields with the output template

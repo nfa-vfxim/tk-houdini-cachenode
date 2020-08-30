@@ -1,4 +1,4 @@
-![Version Label](https://img.shields.io/badge/version-0.2.1-blue)
+![Version Label](https://img.shields.io/badge/version-0.3.1-blue)
 ***
 
 # tk-houdini-cachenode
