@@ -22,3 +22,10 @@ The best way to install and use the app is to clone our pre-configured _sgtk_ [c
 ### Manual Installation
 
 If you'd still like to manually install the app, the following dependencies need to be configured in your _sgtk_ configuration.
+
+#### Dependencies
+
+- [tk-houdini](https://github.com/nfa-vfxim/tk-houdini)
+- [tk-multi-publish2](https://github.com/nfa-vfxim/tk-multi-publish2)
+- [tk-multi-loader2](https://github.com/nfa-vfxim/tk-multi-loader2)
+- [tk-multi-breakdown](https://github.com/nfa-vfxim/tk-multi-breakdown)
