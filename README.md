@@ -1,5 +1,4 @@
-![Version Label](https://img.shields.io/badge/version-0.3.2-blue)
-***
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/nfa-vfxim/tk-houdini-cachenode?include_prereleases)
 
 # tk-houdini-cachenode
 

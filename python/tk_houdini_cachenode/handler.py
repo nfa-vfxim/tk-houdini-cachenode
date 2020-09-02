@@ -83,7 +83,8 @@ class TkCacheNodeHandler(object):
         name = parm.eval()
 
         if not work_file_fields:
-            msg = "This Houdini file is not a Shotgun Toolkit work file!"
+            msg = "This Houdini file is not a Shotgun Toolkit work file! Save the file through Shotgun save and create the node again."
+            hou.ui.displayMessage(msg, buttons=('OK',), severity=hou.severityType.Error)
             raise sgtk.TankError(msg)
 
         # Get the cache templates from the app
