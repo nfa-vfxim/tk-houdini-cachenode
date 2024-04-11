@@ -1,14 +1,12 @@
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/nfa-vfxim/tk-houdini-cachenode?include_prereleases)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/nfa-vfxim/tk-houdini-cachenode?include_prereleases)](https://github.com/nfa-vfxim/tk-houdini-cachenode) 
+[![GitHub issues](https://img.shields.io/github/issues/nfa-vfxim/tk-houdini-cachenode)](https://github.com/nfa-vfxim/tk-houdini-cachenode/issues) 
 
-# tk-houdini-cachenode
 
->Dutch
+# File Cache Node
 
-Dit is een fork van de originele [tk-houdini-alembicnode](https://github.com/shotgunsoftware/tk-houdini-alembicnode) app. Deze app implementeert een node in Houdini waarmee naar Shotgun normale file caches kunnen worden gepublished.
+Support for the Toolkit File Cache node in Houdini.
 
->English
-
-This is a fork of the original [tk-houdini-alembicnode](https://github.com/shotgunsoftware/tk-houdini-alembicnode) app. This app implements a node in Houdini with which you can publish normale file caches to Shotgun.
+> Supported engines: tk-houdini
 
 ## Installation
 
@@ -28,3 +26,22 @@ If you'd still like to manually install the app, the following dependencies need
 - [tk-multi-publish2](https://github.com/nfa-vfxim/tk-multi-publish2)
 - [tk-multi-loader2](https://github.com/nfa-vfxim/tk-multi-loader2)
 - [tk-multi-breakdown](https://github.com/nfa-vfxim/tk-multi-breakdown)
+
+
+## Requirements
+
+| ShotGrid version | Core version | Engine version |
+|------------------|--------------|----------------|
+| -                | v0.12.5      | v1.7.1         |
+
+## Configuration
+
+### Templates
+
+| Name                      | Description                                                                                                                                     | Default value | Fields                    |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------|---------------------------|
+| `work_file_template`      | A reference to a template which locates a Houdini work file on disk. This is used to drive the version and optionally the name of output files. |               | context, version, [name]  |
+| `output_cache_template`   | A reference to a template which defines where the bgeo cache will be written to disk.                                                           |               | context, version, name, * |
+| `output_publish_template` | A reference to a template which defines where the published bgeo cache will be copied to.                                                       |               | context, version, name, * |
+
+
