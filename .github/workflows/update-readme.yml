@@ -7,7 +7,7 @@ on:
       - dev
     paths:
       - "info.yml"
-      - "README_prepend.yml"
+      - "README_prepend.md"
 
 permissions:
   contents: write
@@ -20,4 +20,4 @@ jobs:
       - uses: MaximumFX/tk-readme-generator@v1.0.4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          prepend: README_prepend.yml
+          prepend: README_prepend.md
